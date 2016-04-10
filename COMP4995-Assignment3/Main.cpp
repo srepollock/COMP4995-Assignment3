@@ -35,6 +35,12 @@ long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 			else if (g.getObj2Move()) {
 				g.rotateObjectX(2, -0.3f);
 			}
+			else if (g.getObj3Move()) {
+				g.rotateObjectX(3, -0.3f);
+			}
+			else if (g.getObj4Move()) {
+				g.rotateObjectX(4, -0.3f);
+			}
 		}
 		else {
 			if (g.getCameraMove()) {
@@ -45,6 +51,12 @@ long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 			}
 			else if (g.getObj2Move()) {
 				g.rotateObjectX(2, 0.3f);
+			}
+			else if (g.getObj3Move()) {
+				g.rotateObjectX(3, 0.3f);
+			}
+			else if (g.getObj4Move()) {
+				g.rotateObjectX(4, 0.3f);
 			}
 		}
 		break;
@@ -58,13 +70,19 @@ long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 			break;
 		case 0x31:
 			// 1
-			//g.moveobj(1)
 			g.setObj1Move(true);
 			break;
 		case 0x32:
 			// 2
-			//g.moveobj(2)
 			g.setObj2Move(true);
+			break;
+		case 0x33:
+			// 3
+			g.setObj3Move(true);
+			break;
+		case 0x34:
+			// 4
+			g.setObj4Move(true);
 			break;
 	// moves current selection
 		case 0x57:
@@ -78,6 +96,12 @@ long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 			else if (g.getObj2Move()) {
 				g.moveObject(2, 0.0f, 1.0f, 0.0f);
 			}
+			else if (g.getObj3Move()) {
+				g.moveObject(3, 0.0f, 1.0f, 0.0f);
+			}
+			else if (g.getObj4Move()) {
+				g.moveObject(4, 0.0f, 1.0f, 0.0f);
+			}
 			break;
 		case 0x41:
 			// a // move left
@@ -89,6 +113,12 @@ long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 			}
 			else if (g.getObj2Move()) {
 				g.moveObject(2, -1.0f, 0.0f, 0.0f);
+			}
+			else if (g.getObj3Move()) {
+				g.moveObject(3, -1.0f, 0.0f, 0.0f);
+			}
+			else if (g.getObj4Move()) {
+				g.moveObject(4, -1.0f, 0.0f, 0.0f);
 			}
 			break;
 		case 0x53:
@@ -102,6 +132,12 @@ long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 			else if (g.getObj2Move()) {
 				g.moveObject(2, 0.0f, -1.0f, 0.0f);
 			}
+			else if (g.getObj3Move()) {
+				g.moveObject(3, 0.0f, -1.0f, 0.0f);
+			}
+			else if (g.getObj4Move()) {
+				g.moveObject(4, 0.0f, -1.0f, 0.0f);
+			}
 			break;
 		case 0x44:
 			// d // move right
@@ -113,6 +149,12 @@ long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 			}
 			else if (g.getObj2Move()) {
 				g.moveObject(2, 1.0f, 0.0f, 0.0f);
+			}
+			else if (g.getObj3Move()) {
+				g.moveObject(3, 1.0f, 0.0f, 0.0f);
+			}
+			else if (g.getObj4Move()) {
+				g.moveObject(4, 1.0f, 0.0f, 0.0f);
 			}
 			break;
 		case 0x58:
@@ -126,6 +168,12 @@ long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 			else if (g.getObj2Move()) {
 				g.moveObject(2, 0.0f, 0.0f, 1.0f);
 			}
+			else if (g.getObj3Move()) {
+				g.moveObject(3, 0.0f, 0.0f, 1.0f);
+			}
+			else if (g.getObj4Move()) {
+				g.moveObject(4, 0.0f, 0.0f, 1.0f);
+			}
 			break;
 		case 0x5A:
 			// z // move closer
@@ -137,6 +185,12 @@ long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 			}
 			else if (g.getObj2Move()) {
 				g.moveObject(2, 0.0f, 0.0f, -1.0f);
+			}
+			else if (g.getObj3Move()) {
+				g.moveObject(3, 0.0f, 0.0f, -1.0f);
+			}
+			else if (g.getObj4Move()) {
+				g.moveObject(4, 0.0f, 0.0f, -1.0f);
 			}
 			break;
 		case 0x51:
@@ -150,6 +204,12 @@ long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 			else if (g.getObj2Move()) {
 				g.rotateObjectY(2, -0.3f);
 			}
+			else if (g.getObj3Move()) {
+				g.rotateObjectY(3, -0.3f);
+			}
+			else if (g.getObj4Move()) {
+				g.rotateObjectY(4, -0.3f);
+			}
 			break;
 		case 0x45:
 			// e // rotate right
@@ -161,6 +221,12 @@ long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 			}
 			else if (g.getObj2Move()) {
 				g.rotateObjectY(2, 0.3f);
+			}
+			else if (g.getObj3Move()) {
+				g.rotateObjectY(3, 0.3f);
+			}
+			else if (g.getObj4Move()) {
+				g.rotateObjectY(4, 0.3f);
 			}
 			break;
 		case 0x50:
@@ -194,6 +260,12 @@ long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 			else if (g.getObj2Move()) {
 				g.rotateObjectZ(2, 0.3f);
 			}
+			else if (g.getObj3Move()) {
+				g.rotateObjectZ(3, 0.3f);
+			}
+			else if (g.getObj4Move()) {
+				g.rotateObjectZ(4, 0.3f);
+			}
 			break;
 		case 0x47:
 			// g // rotate about z axis cw
@@ -206,10 +278,18 @@ long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 			else if (g.getObj2Move()) {
 				g.rotateObjectZ(2, -0.3f);
 			}
+			else if (g.getObj3Move()) {
+				g.rotateObjectZ(3, -0.3f);
+			}
+			else if (g.getObj4Move()) {
+				g.rotateObjectZ(4, -0.3f);
+			}
 			break;
 		}
 		return 0;
-	case WM_LBUTTONDOWN:
+	case WM_LBUTTONDOWN: 
+		// This is for picking the object
+
 		return 0;
 	case WM_MOUSEMOVE:
 		if (wParam == MK_LBUTTON) {

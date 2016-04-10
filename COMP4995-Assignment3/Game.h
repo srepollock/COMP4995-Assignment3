@@ -20,20 +20,32 @@ private:
 	int DeviceHeight, DeviceWidth;
 	LPD3DXMESH pMesh = NULL;
 	LPD3DXMESH pMesh2 = NULL;
+	LPD3DXMESH pMesh3 = NULL;
+	LPD3DXMESH pMesh4 = NULL;
 	DWORD dwNumMaterials = 0L;
 	D3DMATERIAL9* pMeshMaterials = NULL;
 	LPDIRECT3DTEXTURE9* pMeshTextures = NULL;
 	DWORD dwNumMaterials2 = 0L;
 	D3DMATERIAL9* pMeshMaterials2 = NULL;
 	LPDIRECT3DTEXTURE9* pMeshTextures2 = NULL;
+	DWORD dwNumMaterials3 = 0L;
+	D3DMATERIAL9* pMeshMaterials3 = NULL;
+	LPDIRECT3DTEXTURE9* pMeshTextures3 = NULL;
+	DWORD dwNumMaterials4 = 0L;
+	D3DMATERIAL9* pMeshMaterials4 = NULL;
+	LPDIRECT3DTEXTURE9* pMeshTextures4 = NULL;
 	D3DXMATRIX matView;
 	D3DXMATRIX matObj1;
 	D3DXMATRIX matObj2;
+	D3DXMATRIX matObj3;
+	D3DXMATRIX matObj4;
 	D3DMATERIAL9 material;
 	D3DLIGHT9 light;
 	bool CameraMove = true; // default move camera
 	bool Obj1Move = false;
 	bool Obj2Move = false;
+	bool Obj3Move = false;
+	bool Obj4Move = false;
 
 public:
 	Game();
@@ -59,9 +71,13 @@ public:
 	bool getCameraMove();
 	bool getObj1Move();
 	bool getObj2Move();
+	bool getObj3Move();
+	bool getObj4Move();
 	void setCameraMove(bool);
 	void setObj1Move(bool);
 	void setObj2Move(bool);
+	void setObj3Move(bool);
+	void setObj4Move(bool);
 	void SetLightingDirectional();
 	void SetLightingAmbient();
 	void SetLightingSpot();

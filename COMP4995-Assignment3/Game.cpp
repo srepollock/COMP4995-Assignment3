@@ -26,7 +26,7 @@ int Game::GameInit() {
 	HRESULT r = 0;//return values
 	D3DSURFACE_DESC desc;
 	LPDIRECT3DSURFACE9 pSurface = 0;
-	LPD3DXBUFFER pD3DXMtrlBuffer, pD3DXMtrlBuffer2;
+	LPD3DXBUFFER pD3DXMtrlBuffer, pD3DXMtrlBuffer2, pD3DXMtrlBuffer3, pD3DXMtrlBuffer4;
 
 	this->pD3D = Direct3DCreate9(D3D_SDK_VERSION);//COM object
 	if (this->pD3D == NULL) {
@@ -62,7 +62,7 @@ int Game::GameInit() {
 	frameController.LoadAlphabet(_T("Alphabet vSmall.bmp"), 8, 16);
 	frameController.InitTiming();
 
-	// Load in the objects
+	// Load in the objects -- Tiger
 	if (FAILED(D3DXLoadMeshFromX(_T("tiger.x"), D3DXMESH_SYSTEMMEM,
 		pDevice, NULL,
 		&pD3DXMtrlBuffer, NULL, 
@@ -80,7 +80,7 @@ int Game::GameInit() {
 		}
 	}
 
-	// Load in the objects
+	// Load in the objects -- Monkey
 	if (FAILED(D3DXLoadMeshFromX(_T("Monkey.x"), D3DXMESH_SYSTEMMEM,
 		pDevice, NULL,
 		&pD3DXMtrlBuffer2, NULL,
@@ -98,12 +98,55 @@ int Game::GameInit() {
 		}
 	}
 
+	// Load in the objects -- Box
+	if (FAILED(D3DXLoadMeshFromX(_T("Box.x"), D3DXMESH_SYSTEMMEM,
+		pDevice, NULL,
+		&pD3DXMtrlBuffer3, NULL,
+		&dwNumMaterials3,
+		&pMesh3)))
+	{
+		// If model is not in current folder, try parent folder
+		if (FAILED(D3DXLoadMeshFromX(_T("..\\Box.x"), D3DXMESH_SYSTEMMEM,
+			pDevice, NULL,
+			&pD3DXMtrlBuffer3, NULL, &dwNumMaterials3,
+			&pMesh3)))
+		{
+			MessageBox(NULL, _T("Could not find Box.x"), _T("Meshes.exe"), MB_OK);
+			return E_FAIL;
+		}
+	}
+
+	// Load in the objects -- Jet
+	if (FAILED(D3DXLoadMeshFromX(_T("Box.x"), D3DXMESH_SYSTEMMEM,
+		pDevice, NULL,
+		&pD3DXMtrlBuffer4, NULL,
+		&dwNumMaterials4,
+		&pMesh4)))
+	{
+		// If model is not in current folder, try parent folder
+		if (FAILED(D3DXLoadMeshFromX(_T("..\\Box.x"), D3DXMESH_SYSTEMMEM,
+			pDevice, NULL,
+			&pD3DXMtrlBuffer4, NULL, &dwNumMaterials4,
+			&pMesh4)))
+		{
+			MessageBox(NULL, _T("Could not find Box.x"), _T("Meshes.exe"), MB_OK);
+			return E_FAIL;
+		}
+	}
+
 	D3DXMATERIAL* d3dxMaterials = (D3DXMATERIAL*)pD3DXMtrlBuffer->GetBufferPointer();
 	pMeshMaterials = new D3DMATERIAL9[dwNumMaterials];
 	pMeshTextures = new LPDIRECT3DTEXTURE9[dwNumMaterials];
 	D3DXMATERIAL* d3dxMaterials2 = (D3DXMATERIAL*)pD3DXMtrlBuffer2->GetBufferPointer();
 	pMeshMaterials2 = new D3DMATERIAL9[dwNumMaterials2];
 	pMeshTextures2 = new LPDIRECT3DTEXTURE9[dwNumMaterials2];
+	D3DXMATERIAL* d3dxMaterials3 = (D3DXMATERIAL*)pD3DXMtrlBuffer3->GetBufferPointer();
+	pMeshMaterials3 = new D3DMATERIAL9[dwNumMaterials3];
+	pMeshTextures3 = new LPDIRECT3DTEXTURE9[dwNumMaterials3];
+	D3DXMATERIAL* d3dxMaterials4 = (D3DXMATERIAL*)pD3DXMtrlBuffer4->GetBufferPointer();
+	pMeshMaterials4 = new D3DMATERIAL9[dwNumMaterials4];
+	pMeshTextures4 = new LPDIRECT3DTEXTURE9[dwNumMaterials4];
+
 
 	for (DWORD i = 0; i<dwNumMaterials; i++)
 	{
@@ -133,7 +176,7 @@ int Game::GameInit() {
 					strTexture,
 					&pMeshTextures[i])))
 				{
-					MessageBox(NULL, _T("Could not find texture map"), _T("Meshes.exe"), MB_OK);
+					MessageBox(NULL, _T("Could not find texture map Tiger"), _T("Meshes.exe"), MB_OK);
 				}
 			}
 		}
@@ -173,7 +216,75 @@ int Game::GameInit() {
 					strTexture,
 					&pMeshTextures2[i])))
 				{
-					MessageBox(NULL, _T("Could not find texture map"), _T("Meshes.exe"), MB_OK);
+					MessageBox(NULL, _T("Could not find texture map Monkey"), _T("Meshes.exe"), MB_OK);
+				}
+			}
+		}
+	}
+
+	for (DWORD i = 0; i<dwNumMaterials3; i++)
+	{
+		// Copy the material
+		pMeshMaterials3[i] = d3dxMaterials3[i].MatD3D;
+
+		// Set the ambient color for the material (D3DX does not do this)
+		pMeshMaterials3[i].Ambient = pMeshMaterials3[i].Diffuse;
+
+		pMeshTextures3[i] = NULL;
+		if (d3dxMaterials3[i].pTextureFilename != NULL &&
+			lstrlen(d3dxMaterials3[i].pTextureFilename) > 0)
+		{
+			// Create the texture
+			if (FAILED(D3DXCreateTextureFromFile(pDevice,
+				d3dxMaterials3[i].pTextureFilename,
+				&pMeshTextures3[i])))
+			{
+				// If texture is not in current folder, try parent folder
+				const TCHAR* strPrefix = TEXT("..\\");
+				const int lenPrefix = lstrlen(strPrefix);
+				TCHAR strTexture[MAX_PATH];
+				lstrcpyn(strTexture, strPrefix, MAX_PATH);
+				lstrcpyn(strTexture + lenPrefix, d3dxMaterials3[i].pTextureFilename, MAX_PATH - lenPrefix);
+				// If texture is not in current folder, try parent folder
+				if (FAILED(D3DXCreateTextureFromFile(pDevice,
+					strTexture,
+					&pMeshTextures3[i])))
+				{
+					MessageBox(NULL, _T("Could not find texture map Box"), _T("Meshes.exe"), MB_OK);
+				}
+			}
+		}
+	}
+
+	for (DWORD i = 0; i<dwNumMaterials4; i++)
+	{
+		// Copy the material
+		pMeshMaterials4[i] = d3dxMaterials4[i].MatD3D;
+
+		// Set the ambient color for the material (D3DX does not do this)
+		pMeshMaterials4[i].Ambient = pMeshMaterials4[i].Diffuse;
+
+		pMeshTextures4[i] = NULL;
+		if (d3dxMaterials4[i].pTextureFilename != NULL &&
+			lstrlen(d3dxMaterials4[i].pTextureFilename) > 0)
+		{
+			// Create the texture
+			if (FAILED(D3DXCreateTextureFromFile(pDevice,
+				d3dxMaterials4[i].pTextureFilename,
+				&pMeshTextures4[i])))
+			{
+				// If texture is not in current folder, try parent folder
+				const TCHAR* strPrefix = TEXT("..\\");
+				const int lenPrefix = lstrlen(strPrefix);
+				TCHAR strTexture[MAX_PATH];
+				lstrcpyn(strTexture, strPrefix, MAX_PATH);
+				lstrcpyn(strTexture + lenPrefix, d3dxMaterials4[i].pTextureFilename, MAX_PATH - lenPrefix);
+				// If texture is not in current folder, try parent folder
+				if (FAILED(D3DXCreateTextureFromFile(pDevice,
+					strTexture,
+					&pMeshTextures4[i])))
+				{
+					MessageBox(NULL, _T("Could not find texture map Box 2"), _T("Meshes.exe"), MB_OK);
 				}
 			}
 		}
@@ -183,6 +294,8 @@ int Game::GameInit() {
 	SetupMatrices();
 	D3DXMatrixTranslation(&matObj1, 0, 0, 0);
 	D3DXMatrixTranslation(&matObj2, 0, 0, 0);
+	D3DXMatrixTranslation(&matObj3, 0, 0, 0);
+	D3DXMatrixTranslation(&matObj4, 0, 0, 0);
 
 	// Done with the material buffer
 	pD3DXMtrlBuffer->Release();
@@ -356,6 +469,28 @@ int Game::Render() {
 		pMesh2->DrawSubset(i);
 	}
 
+	pDevice->SetTransform(D3DTS_WORLD, &matObj3);
+	for (DWORD i = 0; i<dwNumMaterials3; i++)
+	{
+		// Set the material and texture for this subset
+		pDevice->SetMaterial(&pMeshMaterials3[i]);
+		pDevice->SetTexture(0, pMeshTextures3[i]);
+
+		// Draw the mesh subset
+		pMesh3->DrawSubset(i);
+	}
+
+	pDevice->SetTransform(D3DTS_WORLD, &matObj4);
+	for (DWORD i = 0; i<dwNumMaterials4; i++)
+	{
+		// Set the material and texture for this subset
+		pDevice->SetMaterial(&pMeshMaterials4[i]);
+		pDevice->SetTexture(0, pMeshTextures4[i]);
+
+		// Draw the mesh subset
+		pMesh4->DrawSubset(i);
+	}
+
 	//finish rendering
 	this->pDevice->EndScene();
 
@@ -488,9 +623,17 @@ void Game::moveObject(int objNum, float x, float y, float z) {
 		D3DXMatrixTranslation(&newM, x, y, z);
 		D3DXMatrixMultiply(&matObj1, &matObj1, &newM);
 	}
-	else {
+	else if (objNum == 2) {
 		D3DXMatrixTranslation(&newM, x, y, z);
 		D3DXMatrixMultiply(&matObj2, &matObj2, &newM);
+	}
+	else if (objNum == 3) {
+		D3DXMatrixTranslation(&newM, x, y, z);
+		D3DXMatrixMultiply(&matObj3, &matObj3, &newM);
+	}
+	else if (objNum == 4) {
+		D3DXMatrixTranslation(&newM, x, y, z);
+		D3DXMatrixMultiply(&matObj4, &matObj4, &newM);
 	}
 }
 /*
@@ -511,7 +654,7 @@ void Game::rotateObjectX(int objNum, float r) {
 		D3DXMatrixMultiply(&newM, &newM, &backM);
 		D3DXMatrixMultiply(&matObj1, &matObj1, &newM);
 	}
-	else {
+	else if(objNum == 2) {
 		x = matObj2._41;
 		y = matObj2._42;
 		z = matObj2._43;
@@ -526,6 +669,28 @@ void Game::rotateObjectX(int objNum, float r) {
 		D3DXMatrixMultiply(&newM, &newM, &backM);
 
 		D3DXMatrixMultiply(&matObj2, &matObj2, &newM);
+	}
+	else if (objNum == 3) {
+		D3DXMatrixRotationX(&matRot, r);
+		x = matObj3._41;
+		y = matObj3._42;
+		z = matObj3._43;
+		D3DXMatrixTranslation(&newM, -x, -y, -z);
+		D3DXMatrixMultiply(&newM, &newM, &matRot);
+		D3DXMatrixTranslation(&backM, x, y, z);
+		D3DXMatrixMultiply(&newM, &newM, &backM);
+		D3DXMatrixMultiply(&matObj3, &matObj3, &newM);
+	}
+	else if (objNum == 4) {
+		D3DXMatrixRotationX(&matRot, r);
+		x = matObj4._41;
+		y = matObj4._42;
+		z = matObj4._43;
+		D3DXMatrixTranslation(&newM, -x, -y, -z);
+		D3DXMatrixMultiply(&newM, &newM, &matRot);
+		D3DXMatrixTranslation(&backM, x, y, z);
+		D3DXMatrixMultiply(&newM, &newM, &backM);
+		D3DXMatrixMultiply(&matObj4, &matObj4, &newM);
 	}
 }
 /*
@@ -546,7 +711,7 @@ void Game::rotateObjectY(int objNum, float r) {
 		D3DXMatrixMultiply(&newM, &newM, &backM);
 		D3DXMatrixMultiply(&matObj1, &matObj1, &newM);
 	}
-	else {
+	else if(objNum == 2) {
 		x = matObj2._41;
 		y = matObj2._42;
 		z = matObj2._43;
@@ -561,6 +726,28 @@ void Game::rotateObjectY(int objNum, float r) {
 		D3DXMatrixMultiply(&newM, &newM, &backM);
 
 		D3DXMatrixMultiply(&matObj2, &matObj2, &newM);
+	}
+	else if (objNum == 3) {
+		D3DXMatrixRotationY(&matRot, r);
+		x = matObj3._41;
+		y = matObj3._42;
+		z = matObj3._43;
+		D3DXMatrixTranslation(&newM, -x, -y, -z);
+		D3DXMatrixMultiply(&newM, &newM, &matRot);
+		D3DXMatrixTranslation(&backM, x, y, z);
+		D3DXMatrixMultiply(&newM, &newM, &backM);
+		D3DXMatrixMultiply(&matObj3, &matObj3, &newM);
+	}
+	else if (objNum == 4) {
+		D3DXMatrixRotationY(&matRot, r);
+		x = matObj4._41;
+		y = matObj4._42;
+		z = matObj4._43;
+		D3DXMatrixTranslation(&newM, -x, -y, -z);
+		D3DXMatrixMultiply(&newM, &newM, &matRot);
+		D3DXMatrixTranslation(&backM, x, y, z);
+		D3DXMatrixMultiply(&newM, &newM, &backM);
+		D3DXMatrixMultiply(&matObj4, &matObj4, &newM);
 	}
 }
 /*
@@ -581,7 +768,7 @@ void Game::rotateObjectZ(int objNum, float r) {
 		D3DXMatrixMultiply(&newM, &newM, &backM);
 		D3DXMatrixMultiply(&matObj1, &matObj1, &newM);
 	}
-	else {
+	else if( objNum == 2){
 		x = matObj2._41;
 		y = matObj2._42;
 		z = matObj2._43;
@@ -596,6 +783,28 @@ void Game::rotateObjectZ(int objNum, float r) {
 		D3DXMatrixMultiply(&newM, &newM, &backM);
 
 		D3DXMatrixMultiply(&matObj2, &matObj2, &newM);
+	}
+	else if (objNum == 3) {
+		D3DXMatrixRotationZ(&matRot, r);
+		x = matObj3._41;
+		y = matObj3._42;
+		z = matObj3._43;
+		D3DXMatrixTranslation(&newM, -x, -y, -z);
+		D3DXMatrixMultiply(&newM, &newM, &matRot);
+		D3DXMatrixTranslation(&backM, x, y, z);
+		D3DXMatrixMultiply(&newM, &newM, &backM);
+		D3DXMatrixMultiply(&matObj3, &matObj3, &newM);
+	}
+	else if (objNum == 4) {
+		D3DXMatrixRotationZ(&matRot, r);
+		x = matObj4._41;
+		y = matObj4._42;
+		z = matObj4._43;
+		D3DXMatrixTranslation(&newM, -x, -y, -z);
+		D3DXMatrixMultiply(&newM, &newM, &matRot);
+		D3DXMatrixTranslation(&backM, x, y, z);
+		D3DXMatrixMultiply(&newM, &newM, &backM);
+		D3DXMatrixMultiply(&matObj4, &matObj4, &newM);
 	}
 }
 /*
@@ -617,12 +826,26 @@ bool Game::getObj2Move() {
 	return Obj2Move;
 }
 /*
+Gets if object 3 is selected.
+*/
+bool Game::getObj3Move() {
+	return Obj3Move;
+}
+/*
+Gets if object 4 is selected.
+*/
+bool Game::getObj4Move() {
+	return Obj4Move;
+}
+/*
 	Either select's or deselect's the camera.
 */
 void Game::setCameraMove(bool b) {
 	CameraMove = b;
 	Obj1Move = false;
 	Obj2Move = false;
+	Obj3Move = false;
+	Obj4Move = false;
 }
 /*
 	Either select's or deselect's the first object.
@@ -631,6 +854,8 @@ void Game::setObj1Move(bool b) {
 	Obj1Move = b;
 	CameraMove = false;
 	Obj2Move = false;
+	Obj3Move = false;
+	Obj4Move = false;
 }
 /*
 	Either select's or deselect's the second object.
@@ -639,6 +864,28 @@ void Game::setObj2Move(bool b) {
 	Obj2Move = b;
 	CameraMove = false;
 	Obj1Move = false;
+	Obj3Move = false;
+	Obj4Move = false;
+}
+/*
+Either select's or deselect's the thrid object.
+*/
+void Game::setObj3Move(bool b) {
+	Obj3Move = b;
+	CameraMove = false;
+	Obj1Move = false;
+	Obj2Move = false;
+	Obj4Move = false;
+}
+/*
+Either select's or deselect's the fourth object.
+*/
+void Game::setObj4Move(bool b) {
+	Obj4Move = b;
+	CameraMove = false;
+	Obj1Move = false;
+	Obj2Move = false;
+	Obj3Move = false;
 }
 /*
 	Sets the lighting to directional.
