@@ -1,6 +1,8 @@
 #include "Includes.h"
+#include "Engine.h"
 
-Game g;
+//Game g;
+Engine e;
 
 long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 	D3DLOCKED_RECT rect;
@@ -24,41 +26,7 @@ long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 		return 0;
 	}
 	case WM_MOUSEWHEEL:
-		delta = GET_WHEEL_DELTA_WPARAM(wParam);
-		if (delta > 0) {
-			if (g.getCameraMove()) {
-				g.rotateCameraX(-0.3f);
-			}
-			else if (g.getObj1Move()) {
-				g.rotateObjectX(1, -0.3f);
-			}
-			else if (g.getObj2Move()) {
-				g.rotateObjectX(2, -0.3f);
-			}
-			else if (g.getObj3Move()) {
-				g.rotateObjectX(3, -0.3f);
-			}
-			else if (g.getObj4Move()) {
-				g.rotateObjectX(4, -0.3f);
-			}
-		}
-		else {
-			if (g.getCameraMove()) {
-				g.rotateCameraX(0.3f);
-			}
-			else if (g.getObj1Move()) {
-				g.rotateObjectX(1, 0.3f);
-			}
-			else if (g.getObj2Move()) {
-				g.rotateObjectX(2, 0.3f);
-			}
-			else if (g.getObj3Move()) {
-				g.rotateObjectX(3, 0.3f);
-			}
-			else if (g.getObj4Move()) {
-				g.rotateObjectX(4, 0.3f);
-			}
-		}
+		
 		break;
 	case WM_KEYDOWN:
 		switch (wParam) {
@@ -66,225 +34,223 @@ long CALLBACK WndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) {
 			// 0
 			// move camera
 			// set move camera bool
-			g.setCameraMove(true);
+			e.setSelected(-1);
 			break;
 		case 0x31:
 			// 1
-			g.setObj1Move(true);
+			e.setSelected(0);
 			break;
 		case 0x32:
 			// 2
-			g.setObj2Move(true);
+			e.setSelected(1);
 			break;
 		case 0x33:
 			// 3
-			g.setObj3Move(true);
+			e.setSelected(2);
 			break;
-		case 0x34:
-			// 4
-			g.setObj4Move(true);
-			break;
-	// moves current selection
-		case 0x57:
-			// w // move up
-			if (g.getCameraMove()) {
-				g.moveCamera(0.0f, 1.0f, 0.0f);
-			}
-			else if (g.getObj1Move()) {
-				g.moveObject(1, 0.0f, 1.0f, 0.0f);
-			}
-			else if (g.getObj2Move()) {
-				g.moveObject(2, 0.0f, 1.0f, 0.0f);
-			}
-			else if (g.getObj3Move()) {
-				g.moveObject(3, 0.0f, 1.0f, 0.0f);
-			}
-			else if (g.getObj4Move()) {
-				g.moveObject(4, 0.0f, 1.0f, 0.0f);
-			}
-			break;
-		case 0x41:
-			// a // move left
-			if (g.getCameraMove()) {
-				g.moveCamera(-1.0f, 0.0f, 0.0f);
-			}
-			else if (g.getObj1Move()) {
-				g.moveObject(1, -1.0f, 0.0f, 0.0f);
-			}
-			else if (g.getObj2Move()) {
-				g.moveObject(2, -1.0f, 0.0f, 0.0f);
-			}
-			else if (g.getObj3Move()) {
-				g.moveObject(3, -1.0f, 0.0f, 0.0f);
-			}
-			else if (g.getObj4Move()) {
-				g.moveObject(4, -1.0f, 0.0f, 0.0f);
-			}
-			break;
-		case 0x53:
-			// s // move down
-			if (g.getCameraMove()) {
-				g.moveCamera(0.0f, -1.0f, 0.0f);
-			}
-			else if (g.getObj1Move()) {
-				g.moveObject(1, 0.0f, -1.0f, 0.0f);
-			}
-			else if (g.getObj2Move()) {
-				g.moveObject(2, 0.0f, -1.0f, 0.0f);
-			}
-			else if (g.getObj3Move()) {
-				g.moveObject(3, 0.0f, -1.0f, 0.0f);
-			}
-			else if (g.getObj4Move()) {
-				g.moveObject(4, 0.0f, -1.0f, 0.0f);
-			}
-			break;
-		case 0x44:
-			// d // move right
-			if (g.getCameraMove()) {
-				g.moveCamera(1.0f, 0.0f, 0.0f);
-			}
-			else if (g.getObj1Move()) {
-				g.moveObject(1, 1.0f, 0.0f, 0.0f);
-			}
-			else if (g.getObj2Move()) {
-				g.moveObject(2, 1.0f, 0.0f, 0.0f);
-			}
-			else if (g.getObj3Move()) {
-				g.moveObject(3, 1.0f, 0.0f, 0.0f);
-			}
-			else if (g.getObj4Move()) {
-				g.moveObject(4, 1.0f, 0.0f, 0.0f);
-			}
-			break;
-		case 0x58:
-			// x // move farther
-			if (g.getCameraMove()) {
-				g.moveCamera(0.0f, 0.0f, 1.0f);
-			}
-			else if (g.getObj1Move()) {
-				g.moveObject(1, 0.0f, 0.0f, 1.0f);
-			}
-			else if (g.getObj2Move()) {
-				g.moveObject(2, 0.0f, 0.0f, 1.0f);
-			}
-			else if (g.getObj3Move()) {
-				g.moveObject(3, 0.0f, 0.0f, 1.0f);
-			}
-			else if (g.getObj4Move()) {
-				g.moveObject(4, 0.0f, 0.0f, 1.0f);
-			}
-			break;
-		case 0x5A:
-			// z // move closer
-			if (g.getCameraMove()) {
-				g.moveCamera(0.0f, 0.0f, -1.0f);
-			}
-			else if (g.getObj1Move()) {
-				g.moveObject(1, 0.0f, 0.0f, -1.0f);
-			}
-			else if (g.getObj2Move()) {
-				g.moveObject(2, 0.0f, 0.0f, -1.0f);
-			}
-			else if (g.getObj3Move()) {
-				g.moveObject(3, 0.0f, 0.0f, -1.0f);
-			}
-			else if (g.getObj4Move()) {
-				g.moveObject(4, 0.0f, 0.0f, -1.0f);
-			}
-			break;
-		case 0x51:
-			// q // rotate left
-			if (g.getCameraMove()) {
-				g.rotateCameraY(-0.3f);
-			}
-			else if (g.getObj1Move()) {
-				g.rotateObjectY(1, -0.3f);
-			}
-			else if (g.getObj2Move()) {
-				g.rotateObjectY(2, -0.3f);
-			}
-			else if (g.getObj3Move()) {
-				g.rotateObjectY(3, -0.3f);
-			}
-			else if (g.getObj4Move()) {
-				g.rotateObjectY(4, -0.3f);
-			}
-			break;
-		case 0x45:
-			// e // rotate right
-			if (g.getCameraMove()) {
-				g.rotateCameraY(0.3f);
-			}
-			else if (g.getObj1Move()) {
-				g.rotateObjectY(1, 0.3f);
-			}
-			else if (g.getObj2Move()) {
-				g.rotateObjectY(2, 0.3f);
-			}
-			else if (g.getObj3Move()) {
-				g.rotateObjectY(3, 0.3f);
-			}
-			else if (g.getObj4Move()) {
-				g.rotateObjectY(4, 0.3f);
-			}
-			break;
-		case 0x50:
-			// point lighting enabled
-			// p
-			g.SetLightingPoint();
-			break;
-		case 0x4F:
-			// directional lighting enabled
-			// o
-			g.SetLightingDirectional();
-			break;
-		case 0x49:
-			// spot lighting enabled
-			// i
-			g.SetLightingSpot();
-			break;
-		case 0x55:
-			// ambient lighting enabled
-			// u
-			g.SetLightingAmbient();
-			break;
-		case 0x46:
-			// f // rotate about z axis ccw
-			if (g.getCameraMove()) {
-				g.rotateCameraZ(0.3f);
-			}
-			else if (g.getObj1Move()) {
-				g.rotateObjectZ(1, 0.3f);
-			}
-			else if (g.getObj2Move()) {
-				g.rotateObjectZ(2, 0.3f);
-			}
-			else if (g.getObj3Move()) {
-				g.rotateObjectZ(3, 0.3f);
-			}
-			else if (g.getObj4Move()) {
-				g.rotateObjectZ(4, 0.3f);
-			}
-			break;
-		case 0x47:
-			// g // rotate about z axis cw
-			if (g.getCameraMove()) {
-				g.rotateCameraZ(-0.3f);
-			}
-			else if (g.getObj1Move()) {
-				g.rotateObjectZ(1, -0.3f);
-			}
-			else if (g.getObj2Move()) {
-				g.rotateObjectZ(2, -0.3f);
-			}
-			else if (g.getObj3Move()) {
-				g.rotateObjectZ(3, -0.3f);
-			}
-			else if (g.getObj4Move()) {
-				g.rotateObjectZ(4, -0.3f);
-			}
-			break;
+			/*
+			// moves current selection
+				case 0x57:
+					// w // move up
+					if (e.getCameraMove()) {
+						e.moveCamera(0.0f, 1.0f, 0.0f);
+					}
+					else if (e.getObj1Move()) {
+						e.moveObject(1, 0.0f, 1.0f, 0.0f);
+					}
+					else if (e.getObj2Move()) {
+						e.moveObject(2, 0.0f, 1.0f, 0.0f);
+					}
+					else if (e.getObj3Move()) {
+						e.moveObject(3, 0.0f, 1.0f, 0.0f);
+					}
+					else if (e.getObj4Move()) {
+						e.moveObject(4, 0.0f, 1.0f, 0.0f);
+					}
+					break;
+				case 0x41:
+					// a // move left
+					if (e.getCameraMove()) {
+						e.moveCamera(-1.0f, 0.0f, 0.0f);
+					}
+					else if (e.getObj1Move()) {
+						e.moveObject(1, -1.0f, 0.0f, 0.0f);
+					}
+					else if (e.getObj2Move()) {
+						e.moveObject(2, -1.0f, 0.0f, 0.0f);
+					}
+					else if (e.getObj3Move()) {
+						e.moveObject(3, -1.0f, 0.0f, 0.0f);
+					}
+					else if (e.getObj4Move()) {
+						e.moveObject(4, -1.0f, 0.0f, 0.0f);
+					}
+					break;
+				case 0x53:
+					// s // move down
+					if (e.getCameraMove()) {
+						e.moveCamera(0.0f, -1.0f, 0.0f);
+					}
+					else if (e.getObj1Move()) {
+						e.moveObject(1, 0.0f, -1.0f, 0.0f);
+					}
+					else if (e.getObj2Move()) {
+						e.moveObject(2, 0.0f, -1.0f, 0.0f);
+					}
+					else if (e.getObj3Move()) {
+						e.moveObject(3, 0.0f, -1.0f, 0.0f);
+					}
+					else if (e.getObj4Move()) {
+						e.moveObject(4, 0.0f, -1.0f, 0.0f);
+					}
+					break;
+				case 0x44:
+					// d // move right
+					if (e.getCameraMove()) {
+						e.moveCamera(1.0f, 0.0f, 0.0f);
+					}
+					else if (e.getObj1Move()) {
+						e.moveObject(1, 1.0f, 0.0f, 0.0f);
+					}
+					else if (e.getObj2Move()) {
+						e.moveObject(2, 1.0f, 0.0f, 0.0f);
+					}
+					else if (e.getObj3Move()) {
+						e.moveObject(3, 1.0f, 0.0f, 0.0f);
+					}
+					else if (e.getObj4Move()) {
+						e.moveObject(4, 1.0f, 0.0f, 0.0f);
+					}
+					break;
+				case 0x58:
+					// x // move farther
+					if (e.getCameraMove()) {
+						e.moveCamera(0.0f, 0.0f, 1.0f);
+					}
+					else if (e.getObj1Move()) {
+						e.moveObject(1, 0.0f, 0.0f, 1.0f);
+					}
+					else if (e.getObj2Move()) {
+						e.moveObject(2, 0.0f, 0.0f, 1.0f);
+					}
+					else if (e.getObj3Move()) {
+						e.moveObject(3, 0.0f, 0.0f, 1.0f);
+					}
+					else if (e.getObj4Move()) {
+						e.moveObject(4, 0.0f, 0.0f, 1.0f);
+					}
+					break;
+				case 0x5A:
+					// z // move closer
+					if (e.getCameraMove()) {
+						e.moveCamera(0.0f, 0.0f, -1.0f);
+					}
+					else if (e.getObj1Move()) {
+						e.moveObject(1, 0.0f, 0.0f, -1.0f);
+					}
+					else if (e.getObj2Move()) {
+						e.moveObject(2, 0.0f, 0.0f, -1.0f);
+					}
+					else if (e.getObj3Move()) {
+						e.moveObject(3, 0.0f, 0.0f, -1.0f);
+					}
+					else if (e.getObj4Move()) {
+						e.moveObject(4, 0.0f, 0.0f, -1.0f);
+					}
+					break;
+				case 0x51:
+					// q // rotate left
+					if (e.getCameraMove()) {
+						e.rotateCameraY(-0.3f);
+					}
+					else if (e.getObj1Move()) {
+						e.rotateObjectY(1, -0.3f);
+					}
+					else if (e.getObj2Move()) {
+						e.rotateObjectY(2, -0.3f);
+					}
+					else if (e.getObj3Move()) {
+						e.rotateObjectY(3, -0.3f);
+					}
+					else if (e.getObj4Move()) {
+						e.rotateObjectY(4, -0.3f);
+					}
+					break;
+				case 0x45:
+					// e // rotate right
+					if (e.getCameraMove()) {
+						e.rotateCameraY(0.3f);
+					}
+					else if (e.getObj1Move()) {
+						e.rotateObjectY(1, 0.3f);
+					}
+					else if (e.getObj2Move()) {
+						e.rotateObjectY(2, 0.3f);
+					}
+					else if (e.getObj3Move()) {
+						e.rotateObjectY(3, 0.3f);
+					}
+					else if (e.getObj4Move()) {
+						e.rotateObjectY(4, 0.3f);
+					}
+					break;
+				case 0x50:
+					// point lighting enabled
+					// p
+					e.SetLightingPoint();
+					break;
+				case 0x4F:
+					// directional lighting enabled
+					// o
+					e.SetLightingDirectional();
+					break;
+				case 0x49:
+					// spot lighting enabled
+					// i
+					e.SetLightingSpot();
+					break;
+				case 0x55:
+					// ambient lighting enabled
+					// u
+					e.SetLightingAmbient();
+					break;
+				case 0x46:
+					// f // rotate about z axis ccw
+					if (e.getCameraMove()) {
+						e.rotateCameraZ(0.3f);
+					}
+					else if (e.getObj1Move()) {
+						e.rotateObjectZ(1, 0.3f);
+					}
+					else if (e.getObj2Move()) {
+						e.rotateObjectZ(2, 0.3f);
+					}
+					else if (e.getObj3Move()) {
+						e.rotateObjectZ(3, 0.3f);
+					}
+					else if (e.getObj4Move()) {
+						e.rotateObjectZ(4, 0.3f);
+					}
+					break;
+				case 0x47:
+					// g // rotate about z axis cw
+					if (e.getCameraMove()) {
+						e.rotateCameraZ(-0.3f);
+					}
+					else if (e.getObj1Move()) {
+						e.rotateObjectZ(1, -0.3f);
+					}
+					else if (e.getObj2Move()) {
+						e.rotateObjectZ(2, -0.3f);
+					}
+					else if (e.getObj3Move()) {
+						e.rotateObjectZ(3, -0.3f);
+					}
+					else if (e.getObj4Move()) {
+						e.rotateObjectZ(4, -0.3f);
+					}
+					break;
+				}*/
 		}
 		return 0;
 	case WM_LBUTTONDOWN: 
@@ -345,15 +311,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pstrCmdLin
 
 	//g_hWndMain = hWnd;//set our global window handle
 	// FRAME HAS NOT BEEN SETUP!!!
-	g = Game(hWnd);
+	//g = Game(hWnd);
+	e = Engine(hWnd);
 
 	ShowWindow(hWnd, iCmdShow);
 	UpdateWindow(hWnd);
 
+	/*
 	if (FAILED(g.GameInit())) {
 		//initialize Game
 		SetError(_T("Initialization Failed"));
 		g.GameShutdown();
+		return E_FAIL;
+	}
+	*/
+
+	if (FAILED(e.EngineInit())) {
+		//initialize Game
+		SetError(_T("Initialization Failed"));
+		e.EngineShutdown();
 		return E_FAIL;
 	}
 
@@ -365,9 +341,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pstrCmdLin
 			DispatchMessage(&msg);
 		}
 		else {
-			g.GameLoop();
+			//g.GameLoop();
+			e.EngineLoop();
 		}
 	}
-	g.GameShutdown();// clean up the game
+	//g.GameShutdown();// clean up the game
+	e.EngineShutdown();// clean up the game
 	return msg.wParam;
 }

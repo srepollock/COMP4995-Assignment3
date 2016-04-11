@@ -11,7 +11,6 @@ Game::Game() {
 */
 Game::Game(HWND hWnd) {
 	this->hWndMain = hWnd;
-	
 }
 /*
 	Game Destructor
